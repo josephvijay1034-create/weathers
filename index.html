@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temperature Control System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background-color: #f4f7f6;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      min-width: 250px;
+    }
+    .temp-value {
+      font-size: 48px;
+      font-weight: bold;
+      color: #e74c3c;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Current Temperature</h2>
+    <div id="temperature" class="temp-value">Loading...</div>
+  </div>
+
+  <!-- Firebase Compatibility SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvhSpYPVlrJw6q2akkBm0TATPnhMWokP0",
+      authDomain: "temperature-control-syst-a3cae.firebaseapp.com",
+      databaseURL: "https://temperature-control-syst-a3cae-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "temperature-control-syst-a3cae",
+      storageBucket: "temperature-control-syst-a3cae.firebasestorage.app",
+      messagingSenderId: "133740483567",
+      appId: "1:133740483567:web:3d5969c0ea3ca6473d9c1a",
+      measurementId: "G-XMXZN4DTMY"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Get Database instance
+    const database = firebase.database();
+
+    // Listen to real-time changes at path: /temperature (Change 'temperature' to your DB node key)
+    const tempRef = database.ref("temperature");
+
+    tempRef.on("value", (snapshot) => {
+      const data = snapshot.val();
+      const displayElement = document.getElementById("temperature");
+
+      if (data !== null) {
+        displayElement.innerText = `${data} °C`;
+      } else {
+        displayElement.innerText = "No Data Found";
+      }
+    }, (error) => {
+      console.error("Database read failed: ", error);
+      document.getElementById("temperature").innerText = "Permission Denied / Error";
+    });
+  </script>
+
+</body>
+</html>
